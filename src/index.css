@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -35,19 +36,12 @@
     --radius: 0.5rem;
 
     --sidebar-background: 0 0% 98%;
-
     --sidebar-foreground: 240 5.3% 26.1%;
-
     --sidebar-primary: 240 5.9% 10%;
-
     --sidebar-primary-foreground: 0 0% 98%;
-
     --sidebar-accent: 240 4.8% 95.9%;
-
     --sidebar-accent-foreground: 240 5.9% 10%;
-
     --sidebar-border: 220 13% 91%;
-
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
 
@@ -98,4 +92,65 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+@layer components {
+  .glass-panel {
+    background: rgba(10, 10, 15, 0.7);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .neon-glow {
+    box-shadow: 0 0 5px currentColor, 0 0 10px currentColor, 0 0 15px currentColor;
+  }
+
+  .cyberpunk-scrollbar::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  .cyberpunk-scrollbar::-webkit-scrollbar-track {
+    background: rgba(10, 10, 15, 0.3);
+  }
+
+  .cyberpunk-scrollbar::-webkit-scrollbar-thumb {
+    background: linear-gradient(45deg, #00d4ff, #8b5cf6);
+    border-radius: 4px;
+  }
+
+  .cyberpunk-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(45deg, #39ff14, #ff0080);
+  }
+
+  .matrix-bg {
+    background: repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 2px,
+      rgba(57, 255, 20, 0.03) 2px,
+      rgba(57, 255, 20, 0.03) 4px
+    ),
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(57, 255, 20, 0.03) 2px,
+      rgba(57, 255, 20, 0.03) 4px
+    );
+  }
+
+  .minimal-bg {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  }
+}
+
+/* Custom font for cyberpunk aesthetic */
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Fira+Code:wght@300;400;500&display=swap');
+
+.font-cyber {
+  font-family: 'Orbitron', monospace;
+}
+
+.font-code {
+  font-family: 'Fira Code', monospace;
 }
