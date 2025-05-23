@@ -39,7 +39,7 @@ const Sidebar = ({ onFileUpload, onLoadSample, onReset, theme }: SidebarProps) =
   };
 
   const getSidebarClass = () => {
-    const baseClass = "w-16 border-r flex flex-col items-center py-4 space-y-4";
+    const baseClass = "w-16 border-r flex flex-col items-center py-4 space-y-4 relative z-20";
     
     if (theme === 'cyberpunk') {
       return `${baseClass} glass-panel border-neon-blue/20`;
@@ -91,7 +91,7 @@ const Sidebar = ({ onFileUpload, onLoadSample, onReset, theme }: SidebarProps) =
               <Upload className={`w-5 h-5 ${getIconColor()}`} />
             </Button>
           </TooltipTrigger>
-          <TooltipContent side="right">
+          <TooltipContent side="top" className="z-50">
             <p>Upload C File</p>
           </TooltipContent>
         </Tooltip>
@@ -106,7 +106,7 @@ const Sidebar = ({ onFileUpload, onLoadSample, onReset, theme }: SidebarProps) =
               <File className={`w-5 h-5 ${getIconColor()}`} />
             </Button>
           </TooltipTrigger>
-          <TooltipContent side="right">
+          <TooltipContent side="top" className="z-50">
             <p>Load Sample Code</p>
           </TooltipContent>
         </Tooltip>
@@ -121,7 +121,7 @@ const Sidebar = ({ onFileUpload, onLoadSample, onReset, theme }: SidebarProps) =
               <Code className={`w-5 h-5 ${getIconColor()}`} />
             </Button>
           </TooltipTrigger>
-          <TooltipContent side="right">
+          <TooltipContent side="top" className="z-50">
             <p>Reset Editor</p>
           </TooltipContent>
         </Tooltip>

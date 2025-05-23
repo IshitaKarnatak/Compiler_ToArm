@@ -42,39 +42,87 @@ const CodeEditor = ({ value, onChange, theme }: CodeEditorProps) => {
 
   const syntaxHighlight = (code: string) => {
     const keywords = ['#include', 'int', 'char', 'float', 'double', 'void', 'if', 'else', 'while', 'for', 'return', 'printf', 'scanf', 'main'];
-    const types = ['stdio.h', 'stdlib.h', 'string.h'];
     
     let highlighted = code;
     
     // Highlight keywords
     keywords.forEach(keyword => {
       const regex = new RegExp(`\\b${keyword}\\b`, 'g');
-      highlighted = highlighted.replace(regex, `<span class="text-neon-blue font-semibold">${keyword}</span>`);
+      const color = theme === 'cyberpunk' ? 'text-neon-blue' :
+                   theme === 'matrix' ? 'text-neon-green' :
+                   theme === 'basic' ? 'text-basic-blue' :
+                   theme === 'girly' ? 'text-girly-pink' :
+                   'text-blue-400';
+      highlighted = highlighted.replace(regex, `<span class="${color} font-semibold">${keyword}</span>`);
     });
     
     // Highlight strings
-    highlighted = highlighted.replace(/"([^"]*)"/g, '<span class="text-neon-green">"$1"</span>');
+    const stringColor = theme === 'cyberpunk' ? 'text-neon-violet' :
+                       theme === 'matrix' ? 'text-green-400' :
+                       theme === 'basic' ? 'text-green-600' :
+                       theme === 'girly' ? 'text-girly-rose' :
+                       'text-green-400';
+    highlighted = highlighted.replace(/"([^"]*)"/g, `<span class="${stringColor}">"$1"</span>`);
     
     // Highlight numbers
-    highlighted = highlighted.replace(/\b\d+\b/g, '<span class="text-neon-violet">$&</span>');
+    const numberColor = theme === 'cyberpunk' ? 'text-neon-orange' :
+                       theme === 'matrix' ? 'text-yellow-400' :
+                       theme === 'basic' ? 'text-purple-600' :
+                       theme === 'girly' ? 'text-girly-lavender' :
+                       'text-yellow-400';
+    highlighted = highlighted.replace(/\b\d+\b/g, `<span class="${numberColor}">$&</span>`);
     
     // Highlight comments
-    highlighted = highlighted.replace(/\/\/.*$/gm, '<span class="text-gray-500 italic">$&</span>');
-    highlighted = highlighted.replace(/\/\*[\s\S]*?\*\//g, '<span class="text-gray-500 italic">$&</span>');
+    const commentColor = theme === 'cyberpunk' ? 'text-gray-400' :
+                        theme === 'matrix' ? 'text-green-600' :
+                        theme === 'basic' ? 'text-gray-500' :
+                        theme === 'girly' ? 'text-pink-300' :
+                        'text-gray-400';
+    highlighted = highlighted.replace(/\/\/.*$/gm, `<span class="${commentColor} italic">$&</span>`);
+    highlighted = highlighted.replace(/\/\*[\s\S]*?\*\//g, `<span class="${commentColor} italic">$&</span>`);
     
     return highlighted;
   };
 
+  const getEditorBackgroundClass = () => {
+    return theme === 'cyberpunk' ? 'bg-cyber-darker' :
+           theme === 'matrix' ? 'bg-black' :
+           theme === 'basic' ? 'bg-white' :
+           theme === 'girly' ? 'bg-pink-50' :
+           'bg-gray-900';
+  };
+
+  const getLineNumbersClass = () => {
+    return theme === 'cyberpunk' ? 'bg-cyber-dark text-gray-400 border-neon-blue/20' :
+           theme === 'matrix' ? 'bg-black text-green-500 border-neon-green/20' :
+           theme === 'basic' ? 'bg-gray-100 text-gray-600 border-basic-blue/20' :
+           theme === 'girly' ? 'bg-pink-100 text-girly-pink border-girly-pink/20' :
+           'bg-gray-800 text-gray-400 border-gray-600';
+  };
+
+  const getTextColor = () => {
+    return theme === 'cyberpunk' ? 'text-white' :
+           theme === 'matrix' ? 'text-neon-green' :
+           theme === 'basic' ? 'text-gray-900' :
+           theme === 'girly' ? 'text-gray-800' :
+           'text-white';
+  };
+
+  const getCaretColor = () => {
+    return theme === 'cyberpunk' ? 'caret-neon-blue' :
+           theme === 'matrix' ? 'caret-neon-green' :
+           theme === 'basic' ? 'caret-basic-blue' :
+           theme === 'girly' ? 'caret-girly-pink' :
+           'caret-white';
+  };
+
   return (
-    <div className="flex-1 relative overflow-hidden">
+    <div className={`flex-1 relative overflow-hidden ${getEditorBackgroundClass()}`}>
       <div className="absolute inset-0 flex">
         {/* Line Numbers */}
         <div className={`
-          line-numbers flex-shrink-0 w-12 p-2 text-right text-sm font-code overflow-hidden
-          ${theme === 'cyberpunk' ? 'bg-cyber-darker text-gray-500 border-r border-neon-blue/20' :
-            theme === 'matrix' ? 'bg-black text-green-500 border-r border-neon-green/20' :
-            'bg-gray-800 text-gray-400 border-r border-gray-600'
-          }
+          line-numbers flex-shrink-0 w-12 p-2 text-right text-sm font-code overflow-hidden border-r
+          ${getLineNumbersClass()}
         `}>
           {lineNumbers.map(num => (
             <div key={num} className="leading-6">
@@ -89,10 +137,7 @@ const CodeEditor = ({ value, onChange, theme }: CodeEditorProps) => {
           <div 
             className={`
               absolute inset-0 p-4 font-code text-sm leading-6 pointer-events-none whitespace-pre-wrap break-words overflow-hidden
-              ${theme === 'cyberpunk' ? 'text-transparent' :
-                theme === 'matrix' ? 'text-transparent' :
-                'text-transparent'
-              }
+              ${getTextColor()}
             `}
             dangerouslySetInnerHTML={{ __html: syntaxHighlight(value) }}
           />
@@ -106,24 +151,17 @@ const CodeEditor = ({ value, onChange, theme }: CodeEditorProps) => {
             onKeyDown={handleKeyDown}
             className={`
               absolute inset-0 w-full h-full p-4 bg-transparent resize-none outline-none font-code text-sm leading-6
-              text-transparent caret-white cyberpunk-scrollbar
+              text-transparent cyberpunk-scrollbar ${getCaretColor()}
               ${theme === 'cyberpunk' ? 'selection:bg-neon-blue/30' :
                 theme === 'matrix' ? 'selection:bg-neon-green/30' :
+                theme === 'basic' ? 'selection:bg-basic-blue/30' :
+                theme === 'girly' ? 'selection:bg-girly-pink/30' :
                 'selection:bg-blue-500/30'
               }
             `}
             placeholder="Enter your C code here..."
             spellCheck={false}
           />
-          
-          {/* Cursor Animation */}
-          <div className={`
-            absolute top-4 left-4 w-0.5 h-6 animate-cursor-blink pointer-events-none
-            ${theme === 'cyberpunk' ? 'bg-neon-blue' :
-              theme === 'matrix' ? 'bg-neon-green' :
-              'bg-white'
-            }
-          `} />
         </div>
       </div>
     </div>

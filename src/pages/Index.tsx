@@ -263,7 +263,8 @@ make: *** [main] Error 1
       `#include <stdio.h>
 
 int factorial(int n) {
-    if (n <= 1) return 1;
+    if (n <= 1) 
+        return 1;
     return n * factorial(n - 1);
 }
 
@@ -294,6 +295,21 @@ int main() {
     
     printf("String: %s\\n", str);
     printf("Length: %d\\n", len);
+    return 0;
+}`,
+      `#include <stdio.h>
+
+int main() {
+    int a, b;
+    
+    printf("Enter first number: ");
+    scanf("%d", &a);
+    
+    printf("Enter second number: ");
+    scanf("%d", &b);
+    
+    printf("Sum: %d\\n", a + b);
+    printf("Product: %d\\n", a * b);
     return 0;
 }`
     ];
