@@ -16,16 +16,25 @@ const Index = () => {
   const [code, setCode] = useState(`#include <stdio.h>
 
 int main() {
-    int a = 10;
-    int b = 20;
-    int sum = a + b;
+    char name[50];
+    int age;
     
-    printf("Sum: %d\\n", sum);
+    printf("Enter your name: ");
+    scanf("%s", name);
+    
+    printf("Enter your age: ");
+    scanf("%d", &age);
+    
+    printf("Hello %s, you are %d years old!\\n", name, age);
     return 0;
 }`);
   const [output, setOutput] = useState('');
   const [isCompiling, setIsCompiling] = useState(false);
   const [compilationSuccess, setCompilationSuccess] = useState<boolean | null>(null);
+  const [waitingForInput, setWaitingForInput] = useState(false);
+  const [inputPrompt, setInputPrompt] = useState('');
+  const [userInputs, setUserInputs] = useState<string[]>([]);
+  const [currentInputIndex, setCurrentInputIndex] = useState(0);
   const { toast } = useToast();
   const audioContextRef = useRef<AudioContext | null>(null);
 
@@ -137,15 +146,32 @@ int main() {
     setIsCompiling(true);
     setOutput('');
     setCompilationSuccess(null);
+    setWaitingForInput(false);
+    setUserInputs([]);
+    setCurrentInputIndex(0);
 
     // Simulate compilation delay
     await new Promise(resolve => setTimeout(resolve, 2000));
 
+    // Check if code contains scanf or similar input functions
+    const hasInput = code.includes('scanf') || code.includes('gets') || code.includes('getchar');
+    
     // Simulate compilation result (90% success rate)
     const success = Math.random() > 0.1;
     
     if (success) {
-      const armCode = `
+      let simulatedOutput = '';
+      
+      if (hasInput) {
+        // Start interactive execution
+        simulatedOutput = 'Program started...\n';
+        setOutput(simulatedOutput);
+        setCompilationSuccess(true);
+        setWaitingForInput(true);
+        setInputPrompt('Enter your name: ');
+      } else {
+        // Non-interactive program
+        const armCode = `
 .section .data
     msg: .ascii "Sum: %d\\n\\0"
 
@@ -170,12 +196,14 @@ _start:
 
 .section .bss
 `;
-      setOutput(armCode);
-      setCompilationSuccess(true);
+        setOutput(armCode);
+        setCompilationSuccess(true);
+      }
+      
       playSound(800, 0.3, 'success');
       toast({
         title: "Compilation Successful! ⚡",
-        description: "Your C code has been compiled to ARMv8 assembly.",
+        description: hasInput ? "Your interactive C program is ready for input." : "Your C code has been compiled to ARMv8 assembly.",
       });
     } else {
       const errorOutput = `
@@ -199,6 +227,35 @@ make: *** [main] Error 1
     }
 
     setIsCompiling(false);
+  };
+
+  const handleUserInput = (input: string) => {
+    const newInputs = [...userInputs, input];
+    setUserInputs(newInputs);
+    
+    let updatedOutput = output + input + '\n';
+    
+    // Simulate program flow based on input count
+    if (currentInputIndex === 0) {
+      updatedOutput += 'Enter your age: ';
+      setInputPrompt('Enter your age: ');
+      setCurrentInputIndex(1);
+    } else if (currentInputIndex === 1) {
+      const name = newInputs[0];
+      const age = input;
+      updatedOutput += `Hello ${name}, you are ${age} years old!\n`;
+      updatedOutput += '\nProgram execution completed.';
+      setWaitingForInput(false);
+      setCurrentInputIndex(0);
+      
+      playSound(600, 0.2, 'success');
+      toast({
+        title: "Program Executed! 🎉",
+        description: "Your interactive program completed successfully.",
+      });
+    }
+    
+    setOutput(updatedOutput);
   };
 
   const loadSampleCode = () => {
@@ -254,6 +311,9 @@ int main() {
     setCode('');
     setOutput('');
     setCompilationSuccess(null);
+    setWaitingForInput(false);
+    setUserInputs([]);
+    setCurrentInputIndex(0);
     
     toast({
       title: "Editor Reset! 🔄",
@@ -382,7 +442,7 @@ int main() {
                       theme === 'girly' ? 'text-girly-rose' :
                       'text-white'
                     }`}>
-                      ARM Assembly Output
+                      {waitingForInput ? 'Program Output & Input' : 'ARM Assembly Output'}
                     </h2>
                     {compilationSuccess !== null && (
                       <div className={`px-2 py-1 rounded text-xs ${
@@ -400,6 +460,9 @@ int main() {
                     isCompiling={isCompiling}
                     success={compilationSuccess}
                     theme={theme}
+                    onUserInput={handleUserInput}
+                    waitingForInput={waitingForInput}
+                    inputPrompt={inputPrompt}
                   />
                 </div>
               </Card>
@@ -411,13 +474,17 @@ int main() {
         <div className="fixed bottom-8 right-8">
           <Button
             onClick={simulateCompilation}
-            disabled={isCompiling}
+            disabled={isCompiling || waitingForInput}
             className={getCompileButtonClass()}
           >
             {isCompiling ? (
               <>
                 <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
                 Compiling...
+              </>
+            ) : waitingForInput ? (
+              <>
+                {theme === 'girly' ? '💬 Running...' : '⚙️ Running...'}
               </>
             ) : (
               <>
