@@ -101,8 +101,27 @@
     border: 1px solid rgba(255, 255, 255, 0.1);
   }
 
+  .basic-panel {
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(200, 200, 200, 0.3);
+  }
+
+  .girly-panel {
+    background: linear-gradient(135deg, rgba(255, 182, 193, 0.2), rgba(255, 192, 203, 0.3));
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 105, 180, 0.3);
+  }
+
   .neon-glow {
     box-shadow: 0 0 5px currentColor, 0 0 10px currentColor, 0 0 15px currentColor;
+  }
+
+  .basic-shadow {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .girly-glow {
+    box-shadow: 0 0 10px rgba(255, 105, 180, 0.3), 0 0 20px rgba(255, 105, 180, 0.2);
   }
 
   .cyberpunk-scrollbar::-webkit-scrollbar {
@@ -142,10 +161,18 @@
   .minimal-bg {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   }
+
+  .basic-bg {
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  }
+
+  .girly-bg {
+    background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 25%, #ff9a9e 50%, #fecfef 75%, #fecfef 100%);
+  }
 }
 
 /* Custom font for cyberpunk aesthetic */
-@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Fira+Code:wght@300;400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Fira+Code:wght@300;400;500&family=Inter:wght@300;400;500;600&family=Poppins:wght@300;400;500;600;700&display=swap');
 
 .font-cyber {
   font-family: 'Orbitron', monospace;
@@ -153,4 +180,12 @@
 
 .font-code {
   font-family: 'Fira Code', monospace;
+}
+
+.font-basic {
+  font-family: 'Inter', sans-serif;
+}
+
+.font-girly {
+  font-family: 'Poppins', sans-serif;
 }

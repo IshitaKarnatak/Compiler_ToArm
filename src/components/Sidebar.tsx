@@ -17,28 +17,70 @@ const Sidebar = ({ onFileUpload, onLoadSample, onReset, theme }: SidebarProps) =
   const getIconColor = () => {
     return theme === 'cyberpunk' ? 'text-neon-blue hover:text-neon-violet' :
            theme === 'matrix' ? 'text-neon-green hover:text-green-400' :
+           theme === 'basic' ? 'text-basic-blue hover:text-basic-dark' :
+           theme === 'girly' ? 'text-girly-pink hover:text-girly-rose' :
            'text-white hover:text-blue-300';
   };
 
   const getButtonClass = () => {
-    return `
-      glass-panel border-2 hover:scale-105 transition-all duration-300 w-12 h-12 p-0
-      ${theme === 'cyberpunk' ? 'border-neon-blue/30 hover:border-neon-violet hover:neon-glow' :
-        theme === 'matrix' ? 'border-neon-green/30 hover:border-neon-green' :
-        'border-white/30 hover:border-blue-400'
-      }
-    `;
+    const baseClass = "border-2 hover:scale-105 transition-all duration-300 w-12 h-12 p-0";
+    
+    if (theme === 'cyberpunk') {
+      return `${baseClass} glass-panel border-neon-blue/30 hover:border-neon-violet hover:neon-glow`;
+    } else if (theme === 'matrix') {
+      return `${baseClass} glass-panel border-neon-green/30 hover:border-neon-green`;
+    } else if (theme === 'basic') {
+      return `${baseClass} basic-panel border-basic-blue/30 hover:border-basic-blue basic-shadow`;
+    } else if (theme === 'girly') {
+      return `${baseClass} girly-panel border-girly-pink/30 hover:border-girly-rose girly-glow`;
+    } else {
+      return `${baseClass} glass-panel border-white/30 hover:border-blue-400`;
+    }
+  };
+
+  const getSidebarClass = () => {
+    const baseClass = "w-16 border-r flex flex-col items-center py-4 space-y-4";
+    
+    if (theme === 'cyberpunk') {
+      return `${baseClass} glass-panel border-neon-blue/20`;
+    } else if (theme === 'matrix') {
+      return `${baseClass} glass-panel border-neon-green/20`;
+    } else if (theme === 'basic') {
+      return `${baseClass} basic-panel border-basic-blue/20`;
+    } else if (theme === 'girly') {
+      return `${baseClass} girly-panel border-girly-pink/20`;
+    } else {
+      return `${baseClass} glass-panel border-white/20`;
+    }
+  };
+
+  const getThemeIcon = () => {
+    return theme === 'cyberpunk' ? '🌆' :
+           theme === 'matrix' ? '🔢' :
+           theme === 'basic' ? '⚪' :
+           theme === 'girly' ? '💕' :
+           '✨';
+  };
+
+  const getThemeIndicatorClass = () => {
+    const baseClass = "w-8 h-8 rounded-full border-2 flex items-center justify-center text-xs font-bold";
+    
+    if (theme === 'cyberpunk') {
+      return `${baseClass} border-neon-blue text-neon-blue bg-neon-blue/10`;
+    } else if (theme === 'matrix') {
+      return `${baseClass} border-neon-green text-neon-green bg-neon-green/10`;
+    } else if (theme === 'basic') {
+      return `${baseClass} border-basic-blue text-basic-blue bg-basic-blue/10`;
+    } else if (theme === 'girly') {
+      return `${baseClass} border-girly-pink text-girly-pink bg-girly-pink/10 animate-bounce-soft`;
+    } else {
+      return `${baseClass} border-white text-white bg-white/10`;
+    }
   };
 
   return (
     <TooltipProvider>
-      <div className={`
-        w-16 glass-panel border-r flex flex-col items-center py-4 space-y-4
-        ${theme === 'cyberpunk' ? 'border-neon-blue/20' :
-          theme === 'matrix' ? 'border-neon-green/20' :
-          'border-white/20'
-        }
-      `}>
+      <div className={getSidebarClass()}>
         {/* Upload File */}
         <Tooltip>
           <TooltipTrigger asChild>
@@ -95,16 +137,8 @@ const Sidebar = ({ onFileUpload, onLoadSample, onReset, theme }: SidebarProps) =
 
         {/* Theme indicator */}
         <div className="mt-auto">
-          <div className={`
-            w-8 h-8 rounded-full border-2 flex items-center justify-center text-xs font-bold
-            ${theme === 'cyberpunk' ? 'border-neon-blue text-neon-blue bg-neon-blue/10' :
-              theme === 'matrix' ? 'border-neon-green text-neon-green bg-neon-green/10' :
-              'border-white text-white bg-white/10'
-            }
-          `}>
-            {theme === 'cyberpunk' ? '🌆' :
-             theme === 'matrix' ? '🔢' :
-             '✨'}
+          <div className={getThemeIndicatorClass()}>
+            {getThemeIcon()}
           </div>
         </div>
       </div>

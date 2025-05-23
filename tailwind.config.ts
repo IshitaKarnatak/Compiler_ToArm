@@ -76,6 +76,21 @@ export default {
 					darker: '#050508',
 					gray: '#1a1a2e',
 					light: '#16213e'
+				},
+				// Basic theme colors
+				basic: {
+					blue: '#3b82f6',
+					gray: '#6b7280',
+					light: '#f8fafc',
+					dark: '#1e293b'
+				},
+				// Girly theme colors
+				girly: {
+					pink: '#ff69b4',
+					rose: '#ff1493',
+					lavender: '#dda0dd',
+					peach: '#ffb6c1',
+					mint: '#98fb98'
 				}
 			},
 			borderRadius: {
@@ -145,6 +160,16 @@ export default {
 						transform: 'scale(1)',
 						boxShadow: '0 0 0 0 rgba(0, 212, 255, 0)'
 					}
+				},
+				'bounce-soft': {
+					'0%, 100%': {
+						transform: 'translateY(0)',
+						animationTimingFunction: 'cubic-bezier(0,0,0.2,1)'
+					},
+					'50%': {
+						transform: 'translateY(-10px)',
+						animationTimingFunction: 'cubic-bezier(0.8,0,1,1)'
+					}
 				}
 			},
 			animation: {
@@ -156,7 +181,8 @@ export default {
 				'cursor-blink': 'cursor-blink 1s infinite',
 				'slide-up': 'slide-up 0.5s ease-out',
 				'matrix-rain': 'matrix-rain 3s linear infinite',
-				'compile-pulse': 'compile-pulse 2s infinite'
+				'compile-pulse': 'compile-pulse 2s infinite',
+				'bounce-soft': 'bounce-soft 2s infinite'
 			},
 			backdropBlur: {
 				xs: '2px'

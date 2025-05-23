@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -10,7 +9,7 @@ import ConsoleOutput from '@/components/ConsoleOutput';
 import Sidebar from '@/components/Sidebar';
 import ThemeProvider from '@/components/ThemeProvider';
 
-type Theme = 'cyberpunk' | 'matrix' | 'minimal';
+type Theme = 'cyberpunk' | 'matrix' | 'minimal' | 'basic' | 'girly';
 
 const Index = () => {
   const [theme, setTheme] = useState<Theme>('cyberpunk');
@@ -52,6 +51,86 @@ int main() {
     
     oscillator.start(audioContextRef.current.currentTime);
     oscillator.stop(audioContextRef.current.currentTime + duration);
+  };
+
+  const getThemeFont = () => {
+    return theme === 'cyberpunk' ? 'font-cyber' :
+           theme === 'matrix' ? 'font-code' :
+           theme === 'basic' ? 'font-basic' :
+           theme === 'girly' ? 'font-girly' :
+           'font-cyber';
+  };
+
+  const getThemeBackground = () => {
+    return theme === 'cyberpunk' ? 'bg-gradient-to-br from-cyber-dark via-cyber-darker to-cyber-gray' :
+           theme === 'matrix' ? 'bg-black matrix-bg' :
+           theme === 'basic' ? 'basic-bg' :
+           theme === 'girly' ? 'girly-bg' :
+           'minimal-bg';
+  };
+
+  const getHeaderClass = () => {
+    const baseClass = "border-b p-4";
+    
+    if (theme === 'cyberpunk') {
+      return `${baseClass} glass-panel border-neon-blue/20`;
+    } else if (theme === 'matrix') {
+      return `${baseClass} glass-panel border-neon-green/20`;
+    } else if (theme === 'basic') {
+      return `${baseClass} basic-panel border-basic-blue/20`;
+    } else if (theme === 'girly') {
+      return `${baseClass} girly-panel border-girly-pink/20`;
+    } else {
+      return `${baseClass} glass-panel border-neon-blue/20`;
+    }
+  };
+
+  const getTitleClass = () => {
+    const baseClass = "text-3xl font-black tracking-wider";
+    
+    if (theme === 'cyberpunk') {
+      return `${baseClass} text-neon-blue animate-neon-flicker`;
+    } else if (theme === 'matrix') {
+      return `${baseClass} text-neon-green`;
+    } else if (theme === 'basic') {
+      return `${baseClass} text-basic-dark`;
+    } else if (theme === 'girly') {
+      return `${baseClass} text-girly-rose animate-bounce-soft`;
+    } else {
+      return `${baseClass} text-white`;
+    }
+  };
+
+  const getCardClass = (accent: 'blue' | 'violet') => {
+    const baseClass = "h-full overflow-hidden";
+    
+    if (theme === 'cyberpunk') {
+      return `${baseClass} glass-panel border-neon-${accent}/30`;
+    } else if (theme === 'matrix') {
+      return `${baseClass} glass-panel border-neon-green/30`;
+    } else if (theme === 'basic') {
+      return `${baseClass} basic-panel border-basic-blue/30`;
+    } else if (theme === 'girly') {
+      return `${baseClass} girly-panel border-girly-${accent === 'blue' ? 'pink' : 'rose'}/30`;
+    } else {
+      return `${baseClass} glass-panel border-neon-${accent}/30`;
+    }
+  };
+
+  const getCompileButtonClass = () => {
+    const baseClass = `px-8 py-4 text-lg font-bold rounded-lg transition-all duration-300 ${isCompiling ? 'animate-compile-pulse' : 'hover:scale-105'}`;
+    
+    if (theme === 'cyberpunk') {
+      return `${baseClass} bg-gradient-to-r from-neon-blue to-neon-violet hover:from-neon-violet hover:to-neon-blue border-2 border-neon-blue neon-glow`;
+    } else if (theme === 'matrix') {
+      return `${baseClass} bg-gradient-to-r from-neon-green to-green-600 hover:from-green-600 hover:to-neon-green border-2 border-neon-green`;
+    } else if (theme === 'basic') {
+      return `${baseClass} bg-gradient-to-r from-basic-blue to-blue-600 hover:from-blue-600 hover:to-basic-blue border-2 border-basic-blue basic-shadow`;
+    } else if (theme === 'girly') {
+      return `${baseClass} bg-gradient-to-r from-girly-pink to-girly-rose hover:from-girly-rose hover:to-girly-pink border-2 border-girly-pink girly-glow`;
+    } else {
+      return `${baseClass} bg-gradient-to-r from-blue-600 to-purple-600 hover:from-purple-600 hover:to-blue-600`;
+    }
   };
 
   const simulateCompilation = async () => {
@@ -206,35 +285,31 @@ int main() {
 
   return (
     <ThemeProvider theme={theme}>
-      <div className={`min-h-screen font-cyber transition-all duration-500 ${
-        theme === 'cyberpunk' ? 'bg-gradient-to-br from-cyber-dark via-cyber-darker to-cyber-gray' :
-        theme === 'matrix' ? 'bg-black matrix-bg' :
-        'minimal-bg'
-      }`}>
+      <div className={`min-h-screen ${getThemeFont()} transition-all duration-500 ${getThemeBackground()}`}>
         {/* Header */}
-        <header className="glass-panel border-b border-neon-blue/20 p-4">
+        <header className={getHeaderClass()}>
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
-              <h1 className={`text-3xl font-black tracking-wider ${
-                theme === 'cyberpunk' ? 'text-neon-blue animate-neon-flicker' :
-                theme === 'matrix' ? 'text-neon-green' :
-                'text-white'
-              }`}>
+              <h1 className={getTitleClass()}>
                 ⚡ ToARM
               </h1>
               <span className="text-sm text-gray-400">
-                Cyberpunk C to ARM Compiler
+                {theme === 'basic' ? 'Simple C to ARM Compiler' :
+                 theme === 'girly' ? 'Cute C to ARM Compiler ✨' :
+                 'Cyberpunk C to ARM Compiler'}
               </span>
             </div>
             
             <div className="flex items-center space-x-4">
               <Select value={theme} onValueChange={(value: Theme) => setTheme(value)}>
-                <SelectTrigger className="w-40 glass-panel border-neon-violet/50">
+                <SelectTrigger className={`w-40 ${theme === 'basic' ? 'basic-panel border-basic-blue/50' : theme === 'girly' ? 'girly-panel border-girly-pink/50' : 'glass-panel border-neon-violet/50'}`}>
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent className="glass-panel border-neon-violet/50">
+                <SelectContent className={`${theme === 'basic' ? 'basic-panel border-basic-blue/50' : theme === 'girly' ? 'girly-panel border-girly-pink/50' : 'glass-panel border-neon-violet/50'}`}>
                   <SelectItem value="cyberpunk">🌆 Cyberpunk</SelectItem>
                   <SelectItem value="matrix">🔢 Matrix</SelectItem>
+                  <SelectItem value="basic">⚪ Basic</SelectItem>
+                  <SelectItem value="girly">💕 Girly</SelectItem>
                   <SelectItem value="minimal">✨ Minimal</SelectItem>
                 </SelectContent>
               </Select>
@@ -255,16 +330,20 @@ int main() {
           <div className="flex-1 flex">
             {/* Code Editor Panel */}
             <div className="flex-1 p-4">
-              <Card className="h-full glass-panel border-neon-blue/30 overflow-hidden">
+              <Card className={getCardClass('blue')}>
                 <div className="h-full flex flex-col">
-                  <div className={`p-3 border-b border-neon-blue/20 flex items-center justify-between ${
-                    theme === 'cyberpunk' ? 'bg-cyber-gray/50' :
-                    theme === 'matrix' ? 'bg-black/50' :
-                    'bg-white/10'
+                  <div className={`p-3 border-b flex items-center justify-between ${
+                    theme === 'cyberpunk' ? 'border-neon-blue/20 bg-cyber-gray/50' :
+                    theme === 'matrix' ? 'border-neon-green/20 bg-black/50' :
+                    theme === 'basic' ? 'border-basic-blue/20 bg-gray-50' :
+                    theme === 'girly' ? 'border-girly-pink/20 bg-pink-50/30' :
+                    'border-neon-blue/20 bg-white/10'
                   }`}>
                     <h2 className={`font-semibold ${
                       theme === 'cyberpunk' ? 'text-neon-blue' :
                       theme === 'matrix' ? 'text-neon-green' :
+                      theme === 'basic' ? 'text-basic-dark' :
+                      theme === 'girly' ? 'text-girly-rose' :
                       'text-white'
                     }`}>
                       C Source Code
@@ -287,16 +366,20 @@ int main() {
 
             {/* Output Panel */}
             <div className="flex-1 p-4">
-              <Card className="h-full glass-panel border-neon-violet/30 overflow-hidden">
+              <Card className={getCardClass('violet')}>
                 <div className="h-full flex flex-col">
-                  <div className={`p-3 border-b border-neon-violet/20 flex items-center justify-between ${
-                    theme === 'cyberpunk' ? 'bg-cyber-gray/50' :
-                    theme === 'matrix' ? 'bg-black/50' :
-                    'bg-white/10'
+                  <div className={`p-3 border-b flex items-center justify-between ${
+                    theme === 'cyberpunk' ? 'border-neon-violet/20 bg-cyber-gray/50' :
+                    theme === 'matrix' ? 'border-neon-green/20 bg-black/50' :
+                    theme === 'basic' ? 'border-basic-blue/20 bg-gray-50' :
+                    theme === 'girly' ? 'border-girly-rose/20 bg-pink-50/30' :
+                    'border-neon-violet/20 bg-white/10'
                   }`}>
                     <h2 className={`font-semibold ${
                       theme === 'cyberpunk' ? 'text-neon-violet' :
                       theme === 'matrix' ? 'text-neon-green' :
+                      theme === 'basic' ? 'text-basic-dark' :
+                      theme === 'girly' ? 'text-girly-rose' :
                       'text-white'
                     }`}>
                       ARM Assembly Output
@@ -329,16 +412,7 @@ int main() {
           <Button
             onClick={simulateCompilation}
             disabled={isCompiling}
-            className={`
-              px-8 py-4 text-lg font-bold rounded-lg transition-all duration-300
-              ${isCompiling ? 'animate-compile-pulse' : 'hover:scale-105'}
-              ${theme === 'cyberpunk' 
-                ? 'bg-gradient-to-r from-neon-blue to-neon-violet hover:from-neon-violet hover:to-neon-blue border-2 border-neon-blue neon-glow' 
-                : theme === 'matrix'
-                ? 'bg-gradient-to-r from-neon-green to-green-600 hover:from-green-600 hover:to-neon-green border-2 border-neon-green'
-                : 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-purple-600 hover:to-blue-600'
-              }
-            `}
+            className={getCompileButtonClass()}
           >
             {isCompiling ? (
               <>
@@ -346,7 +420,9 @@ int main() {
                 Compiling...
               </>
             ) : (
-              <>⚡ Compile</>
+              <>
+                {theme === 'girly' ? '💖 Compile' : '⚡ Compile'}
+              </>
             )}
           </Button>
         </div>
